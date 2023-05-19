@@ -11,13 +11,12 @@ public interface UserService {
 
    UserDTO update(UserDTO dto);
    void deleteByUserName(String username);
+   void delete(String username);
+
+
     void save(UserDTO dto);
 
-
-
-
-
-
+    List<UserDTO>listAllByRole(String role);
 
 
 }

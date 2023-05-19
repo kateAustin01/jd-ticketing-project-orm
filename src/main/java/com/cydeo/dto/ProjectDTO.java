@@ -15,6 +15,9 @@ import java.time.LocalDate;
 @Data
 public class ProjectDTO {
 
+
+
+    private Long id;
     @NotBlank
     private String projectName;
 
@@ -28,7 +31,7 @@ public class ProjectDTO {
     @NotNull
     private LocalDate startDate;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+@DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private LocalDate endDate;
 
