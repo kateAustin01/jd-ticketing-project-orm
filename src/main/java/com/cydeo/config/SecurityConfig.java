@@ -2,28 +2,27 @@ package com.cydeo.config;
 
 
 
-import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
+import com.cydeo.service.SecurityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 public class SecurityConfig {
 
 
-    //We won't be doing this way. we need to get all the user info from the db
+    private final SecurityService securityService;
+    private final AuthenticationSuccessHandler authSuccessHandler;
+
+    public SecurityConfig(SecurityService securityService, AuthenticationSuccessHandler authSuccessHandler) {
+        this.securityService = securityService;
+        this.authSuccessHandler = authSuccessHandler;
+    }
+
+//We won't be doing this way. we need to get all the user info from the db
 //        @Bean
 //    public UserDetailsService userDetailsService(PasswordEncoder encoder){
 //
@@ -48,7 +47,7 @@ public class SecurityConfig {
                 .antMatchers("/user/**").hasAuthority("Admin")
                 .antMatchers("/project/**").hasAuthority("Manager")
                 .antMatchers("/task/employee/**").hasAuthority("Employee")
-                .antMatchers("/task/**").hasRole("Employee")
+                .antMatchers("/task/**").hasAuthority("Employee")
 
 
 //                .antMatchers("/task/**").hasAnyRole("EMPLOYEE","ADMIN")
@@ -66,13 +65,19 @@ public class SecurityConfig {
 //                .httpBasic()
                 .formLogin()
                        .loginPage("/login")
-                       .defaultSuccessUrl("/welcome")
+//                       .defaultSuccessUrl("/welcome")
+                .successHandler(authSuccessHandler)
                        .failureUrl("/login?error=true")
                        .permitAll()
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login")
+                .and()
+                      .rememberMe()
+                      .tokenValiditySeconds(120)
+                      .key("cydeo")
+                      .userDetailsService(securityService)
                 .and().build();
 
     }
