@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @MappedSuperclass
+@EntityListeners(BaseEntity.class)
 public class BaseEntity {
 
     @Id
