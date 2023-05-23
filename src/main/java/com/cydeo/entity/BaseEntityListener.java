@@ -6,11 +6,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityListeners;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
 @Component
+
 public class BaseEntityListener extends AuditingEntityListener {
     @PrePersist
     public void onPrePersist(BaseEntity baseEntity){
